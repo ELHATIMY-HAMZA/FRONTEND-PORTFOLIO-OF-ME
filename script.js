@@ -405,6 +405,18 @@ if (techArsenalCanvas) {
   }
   
   animateTA();
+
+  if (typeof gsap !== 'undefined' && typeof ScrollTrigger !== 'undefined') {
+    gsap.registerPlugin(ScrollTrigger);
+    gsap.to(tkMesh.rotation, {
+      scrollTrigger: { trigger: "#tech-arsenal", start: "top bottom", end: "bottom top", scrub: 1 },
+      y: Math.PI * 2, z: Math.PI
+    });
+    gsap.to(taPoints.position, {
+      scrollTrigger: { trigger: "#tech-arsenal", start: "top bottom", end: "bottom top", scrub: 1 },
+      y: 100
+    });
+  }
   
   window.addEventListener('resize', () => {
     if(techArsenalCanvas) {
@@ -474,4 +486,110 @@ if (globeCanvas) {
   }
 
   animateGlobe();
+
+  if (typeof gsap !== 'undefined' && typeof ScrollTrigger !== 'undefined') {
+    gsap.registerPlugin(ScrollTrigger);
+    gsap.to([wireframeGlobe.rotation, pointsGlobe.rotation], {
+      scrollTrigger: { trigger: "#about", start: "top bottom", end: "bottom top", scrub: 1 },
+      y: "+=" + Math.PI * 2, x: "+=" + Math.PI
+    });
+  }
 }
+
+// ===== GSAP Scroll-Driven 3D Effects for Hero =====
+document.addEventListener("DOMContentLoaded", () => {
+  if (typeof gsap !== 'undefined' && typeof ScrollTrigger !== 'undefined') {
+    gsap.registerPlugin(ScrollTrigger);
+    gsap.to(camera.position, {
+      scrollTrigger: { trigger: "body", start: "top top", end: "bottom bottom", scrub: 1 },
+      z: 20, y: -20
+    });
+    gsap.to(particles.rotation, {
+      scrollTrigger: { trigger: "body", start: "top top", end: "bottom bottom", scrub: 2 },
+      x: Math.PI / 4, z: Math.PI / 8
+    });
+  }
+});
+
+// ===== 3D Project Thumbnails =====
+function initProject3D(canvasId, geometryType, colorHex) {
+  const canvas = document.getElementById(canvasId);
+  if (!canvas) return;
+
+  const pScene = new THREE.Scene();
+  const pCamera = new THREE.PerspectiveCamera(50, canvas.clientWidth / canvas.clientHeight, 0.1, 100);
+  pCamera.position.z = 5;
+
+  const isMobile = /iPhone|iPad|Android/i.test(navigator.userAgent);
+  const pDpr = isMobile ? 1 : Math.min(window.devicePixelRatio, 2);
+
+  const pRenderer = new THREE.WebGLRenderer({ canvas, alpha: true, antialias: true });
+  pRenderer.setPixelRatio(pDpr);
+  pRenderer.setSize(canvas.clientWidth, canvas.clientHeight);
+
+  let geometry;
+  if (geometryType === 'torus') {
+    geometry = new THREE.TorusKnotGeometry(1.2, 0.35, 100, 16);
+  } else if (geometryType === 'cylinder') {
+    geometry = new THREE.CylinderGeometry(1.2, 1.2, 2.5, 32);
+  } else {
+    geometry = new THREE.OctahedronGeometry(1.6, 0);
+  }
+
+  const material = new THREE.MeshPhysicalMaterial({
+    color: colorHex,
+    metalness: 0.2,
+    roughness: 0.1,
+    transmission: 0.9,
+    thickness: 0.5,
+    clearcoat: 1.0,
+    clearcoatRoughness: 0.1
+  });
+
+  const mesh = new THREE.Mesh(geometry, material);
+  pScene.add(mesh);
+
+  const ambientLight = new THREE.AmbientLight(0xffffff, 0.6);
+  pScene.add(ambientLight);
+  const dirLight = new THREE.DirectionalLight(0xffffff, 1.5);
+  dirLight.position.set(5, 5, 5);
+  pScene.add(dirLight);
+  const pointLight = new THREE.PointLight(0xff00ff, 2);
+  pointLight.position.set(-5, -5, 5);
+  pScene.add(pointLight);
+
+  if (typeof gsap !== 'undefined') {
+    gsap.to(mesh.rotation, { x: Math.PI * 2, y: Math.PI * 2, duration: 15, repeat: -1, ease: "none" });
+  }
+
+  const card = canvas.closest('.project-card');
+  if (card && typeof gsap !== 'undefined') {
+    card.addEventListener('mouseenter', () => {
+      gsap.to(mesh.scale, { x: 1.2, y: 1.2, z: 1.2, duration: 0.4, ease: "back.out(1.7)" });
+      gsap.to(material, { transmission: 0.5, roughness: 0.05, duration: 0.4 });
+    });
+    card.addEventListener('mouseleave', () => {
+      gsap.to(mesh.scale, { x: 1, y: 1, z: 1, duration: 0.4, ease: "power2.out" });
+      gsap.to(material, { transmission: 0.9, roughness: 0.1, duration: 0.4 });
+    });
+  }
+
+  function render() {
+    requestAnimationFrame(render);
+    pRenderer.render(pScene, pCamera);
+  }
+  render();
+
+  window.addEventListener('resize', () => {
+    if (canvas.clientWidth === 0) return;
+    pCamera.aspect = canvas.clientWidth / canvas.clientHeight;
+    pCamera.updateProjectionMatrix();
+    pRenderer.setSize(canvas.clientWidth, canvas.clientHeight);
+  });
+}
+
+setTimeout(() => {
+  initProject3D('project-canvas-1', 'torus', 0x8a2be2);
+  initProject3D('project-canvas-2', 'cylinder', 0x00ffff);
+  initProject3D('project-canvas-3', 'octahedron', 0xff007f);
+}, 500);
