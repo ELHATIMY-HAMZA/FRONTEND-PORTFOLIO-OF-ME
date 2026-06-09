@@ -293,11 +293,11 @@ tiltCards.forEach(card => {
 });
 
 // ===== Form handling =====
-const contactForm = document.getElementById('contact-form');
+const contactForm = document.querySelector('.contact-form');
 if (contactForm) {
   contactForm.addEventListener('submit', (e) => {
     e.preventDefault();
-    const btn = contactForm.querySelector('.btn-primary');
+    const btn = contactForm.querySelector('.btn-gradient');
     const originalText = btn.textContent;
     btn.textContent = 'Sending...';
     btn.style.opacity = '0.7';
@@ -511,85 +511,130 @@ document.addEventListener("DOMContentLoaded", () => {
   }
 });
 
-// ===== 3D Project Thumbnails =====
-function initProject3D(canvasId, geometryType, colorHex) {
-  const canvas = document.getElementById(canvasId);
-  if (!canvas) return;
+// ===== Projects Image Reveal =====
+const irItems = document.querySelectorAll('.ir-item');
+const irCursorImg = document.getElementById('ir-cursor-img');
+const irCursorImgEl = document.getElementById('ir-cursor-img-el');
 
-  const pScene = new THREE.Scene();
-  const pCamera = new THREE.PerspectiveCamera(50, canvas.clientWidth / canvas.clientHeight, 0.1, 100);
-  pCamera.position.z = 5;
-
-  const isMobile = /iPhone|iPad|Android/i.test(navigator.userAgent);
-  const pDpr = isMobile ? 1 : Math.min(window.devicePixelRatio, 2);
-
-  const pRenderer = new THREE.WebGLRenderer({ canvas, alpha: true, antialias: true });
-  pRenderer.setPixelRatio(pDpr);
-  pRenderer.setSize(canvas.clientWidth, canvas.clientHeight);
-
-  let geometry;
-  if (geometryType === 'torus') {
-    geometry = new THREE.TorusKnotGeometry(1.2, 0.35, 100, 16);
-  } else if (geometryType === 'cylinder') {
-    geometry = new THREE.CylinderGeometry(1.2, 1.2, 2.5, 32);
-  } else {
-    geometry = new THREE.OctahedronGeometry(1.6, 0);
-  }
-
-  const material = new THREE.MeshPhysicalMaterial({
-    color: colorHex,
-    metalness: 0.2,
-    roughness: 0.1,
-    transmission: 0.9,
-    thickness: 0.5,
-    clearcoat: 1.0,
-    clearcoatRoughness: 0.1
-  });
-
-  const mesh = new THREE.Mesh(geometry, material);
-  pScene.add(mesh);
-
-  const ambientLight = new THREE.AmbientLight(0xffffff, 0.6);
-  pScene.add(ambientLight);
-  const dirLight = new THREE.DirectionalLight(0xffffff, 1.5);
-  dirLight.position.set(5, 5, 5);
-  pScene.add(dirLight);
-  const pointLight = new THREE.PointLight(0xff00ff, 2);
-  pointLight.position.set(-5, -5, 5);
-  pScene.add(pointLight);
-
-  if (typeof gsap !== 'undefined') {
-    gsap.to(mesh.rotation, { x: Math.PI * 2, y: Math.PI * 2, duration: 15, repeat: -1, ease: "none" });
-  }
-
-  const card = canvas.closest('.project-card');
-  if (card && typeof gsap !== 'undefined') {
-    card.addEventListener('mouseenter', () => {
-      gsap.to(mesh.scale, { x: 1.2, y: 1.2, z: 1.2, duration: 0.4, ease: "back.out(1.7)" });
-      gsap.to(material, { transmission: 0.5, roughness: 0.05, duration: 0.4 });
-    });
-    card.addEventListener('mouseleave', () => {
-      gsap.to(mesh.scale, { x: 1, y: 1, z: 1, duration: 0.4, ease: "power2.out" });
-      gsap.to(material, { transmission: 0.9, roughness: 0.1, duration: 0.4 });
-    });
-  }
-
-  function render() {
-    requestAnimationFrame(render);
-    pRenderer.render(pScene, pCamera);
-  }
-  render();
-
+if (irItems.length > 0 && irCursorImg && irCursorImgEl) {
+  let isLargeScreen = window.innerWidth >= 768;
+  
   window.addEventListener('resize', () => {
-    if (canvas.clientWidth === 0) return;
-    pCamera.aspect = canvas.clientWidth / canvas.clientHeight;
-    pCamera.updateProjectionMatrix();
-    pRenderer.setSize(canvas.clientWidth, canvas.clientHeight);
+    isLargeScreen = window.innerWidth >= 768;
   });
+
+  // Smooth spring-like cursor tracking (vanilla JS equivalent of Framer Motion's useSpring)
+  let mx = 0, my = 0;
+  let cx = 0, cy = 0;
+  
+  document.addEventListener('mousemove', (e) => {
+    mx = e.clientX;
+    my = e.clientY;
+  });
+  
+  function updateIrCursor() {
+    if (isLargeScreen && irCursorImg.classList.contains('active')) {
+      // Spring physics approximation
+      const stiffness = 0.15;
+      
+      const dx = mx - cx;
+      const dy = my - cy;
+      
+      cx += dx * stiffness;
+      cy += dy * stiffness;
+      
+      irCursorImg.style.left = cx + 'px';
+      irCursorImg.style.top = cy + 'px';
+    }
+    requestAnimationFrame(updateIrCursor);
+  }
+  updateIrCursor();
+
+  irItems.forEach(item => {
+    item.addEventListener('mouseenter', () => {
+      if (!isLargeScreen) return;
+      const imgSrc = item.getAttribute('data-img');
+      if (imgSrc) {
+        irCursorImgEl.src = imgSrc;
+        irCursorImgEl.alt = item.querySelector('.ir-title').textContent;
+        // Snap the cursor image to the exact mouse position immediately on entry
+        if (!irCursorImg.classList.contains('active')) {
+           cx = mx;
+           cy = my;
+           irCursorImg.style.left = cx + 'px';
+           irCursorImg.style.top = cy + 'px';
+        }
+        irCursorImg.classList.add('active');
+      }
+    });
+  });
+  
+  const irList = document.getElementById('ir-projects');
+  if (irList) {
+    irList.addEventListener('mouseleave', () => {
+      irCursorImg.classList.remove('active');
+    });
+  }
 }
 
-setTimeout(() => {
-  initProject3D('project-canvas-1', 'torus', 0x8a2be2);
-  initProject3D('project-canvas-2', 'cylinder', 0x00ffff);
-  initProject3D('project-canvas-3', 'octahedron', 0xff007f);
-}, 500);
+// ===== WebGL Fluid Simulation =====
+const fluidCanvas = document.getElementById('fluid-canvas');
+if (fluidCanvas && typeof WebGLFluid === 'function') {
+  WebGLFluid(fluidCanvas, {
+    IMMEDIATE: true,
+    TRIGGER: 'hover',
+    SIM_RESOLUTION: 128,
+    DYE_RESOLUTION: 512,
+    CAPTURE_RESOLUTION: 512,
+    DENSITY_DISSIPATION: 1.5, // Lasts much longer
+    VELOCITY_DISSIPATION: 0.8, // Spreads further
+    PRESSURE: 0.4,
+    PRESSURE_ITERATIONS: 20,
+    CURL: 15, // More pronounced smoky swirls
+    SPLAT_RADIUS: 0.35, // Much thicker, highly visible trail
+    SPLAT_FORCE: 6000,
+    SHADING: true,
+    COLORFUL: true, // Uses vibrant, contrasting neon colors
+    COLOR_UPDATE_SPEED: 10,
+    PAUSED: false,
+    BACK_COLOR: { r: 0, g: 0, b: 0 },
+    TRANSPARENT: true, // Blends cleanly over the background
+    BLOOM: true,
+    BLOOM_ITERATIONS: 8,
+    BLOOM_RESOLUTION: 256,
+    BLOOM_INTENSITY: 0.85, // Much brighter glowing effect
+    BLOOM_THRESHOLD: 0.4,
+    BLOOM_SOFT_KNEE: 0.7,
+    SUNRAYS: true,
+    SUNRAYS_RESOLUTION: 196,
+    SUNRAYS_WEIGHT: 1.2, // Pronounced light rays
+  });
+
+  // Forward mouse events to fluid canvas since it has pointer-events: none
+  const forwardEvent = (e) => {
+    const clone = new MouseEvent(e.type, {
+      clientX: e.clientX,
+      clientY: e.clientY,
+      bubbles: false,
+      cancelable: false
+    });
+    fluidCanvas.dispatchEvent(clone);
+  };
+  
+  window.addEventListener('mousemove', forwardEvent);
+  window.addEventListener('mousedown', forwardEvent);
+  window.addEventListener('mouseup', forwardEvent);
+  window.addEventListener('touchstart', (e) => {
+    if(e.touches.length > 0) {
+      fluidCanvas.dispatchEvent(new TouchEvent(e.type, { touches: e.touches }));
+    }
+  });
+  window.addEventListener('touchmove', (e) => {
+    if(e.touches.length > 0) {
+      fluidCanvas.dispatchEvent(new TouchEvent(e.type, { touches: e.touches }));
+    }
+  });
+  window.addEventListener('touchend', (e) => {
+    fluidCanvas.dispatchEvent(new TouchEvent(e.type, { changedTouches: e.changedTouches }));
+  });
+}
