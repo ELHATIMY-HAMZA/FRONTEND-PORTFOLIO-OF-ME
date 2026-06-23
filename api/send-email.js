@@ -21,7 +21,7 @@ export default async function handler(req, res) {
     const data = await resend.batch.send([
       // 1. Email to YOU (notification)
       {
-        from: 'onboarding@resend.dev', // Replace with your verified domain (e.g., hello@yourdomain.com) when ready
+        from: 'hamza@moroagent.com', // Replace with your verified domain (e.g., hello@yourdomain.com) when ready
         to: 'hamzaelhatimy7@gmail.com',
         subject: `New Portfolio Message: ${subject || 'No Subject'}`,
         html: `
@@ -33,7 +33,7 @@ export default async function handler(req, res) {
       },
       // 2. Auto-reply to the USER (thank you)
       {
-        from: 'onboarding@resend.dev', // Replace with your verified domain (e.g., hello@yourdomain.com) when ready
+        from: 'hamza@moroagent.com', // Verified custom domain
         to: email, // Sends back to the person who filled the form
         subject: `Thank you for reaching out, ${name}!`,
         html: `
