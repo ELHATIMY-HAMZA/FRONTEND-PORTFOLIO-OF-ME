@@ -292,31 +292,64 @@ tiltCards.forEach(card => {
   });
 });
 
-// ===== Form handling =====
-const contactForm = document.querySelector('.contact-form');
+// ===== Form handling with Resend API =====
+const contactForm = document.getElementById('contact-form');
 if (contactForm) {
-  contactForm.addEventListener('submit', (e) => {
+  contactForm.addEventListener('submit', async (e) => {
     e.preventDefault();
-    const btn = contactForm.querySelector('.btn-gradient');
-    const originalText = btn.textContent;
-    btn.textContent = 'Sending...';
+    const btn = document.getElementById('submit-btn');
+    const originalText = btn.innerHTML;
+    
+    // UI Loading state
+    btn.innerHTML = 'Sending... <i data-lucide="loader" class="spin"></i>';
     btn.style.opacity = '0.7';
     btn.disabled = true;
 
-    setTimeout(() => {
-      btn.textContent = 'Message Sent! ✓';
-      btn.style.opacity = '1';
-      btn.style.background = 'linear-gradient(135deg, #00e676, #22d3c5)';
-      btn.style.boxShadow = '0 4px 24px rgba(0, 230, 118, 0.3)';
+    // Gather data
+    const name = document.getElementById('name').value;
+    const email = document.getElementById('email').value;
+    const subject = document.getElementById('subject').value;
+    const message = document.getElementById('message').value;
 
+    try {
+      const response = await fetch('/api/send-email', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({ name, email, subject, message })
+      });
+
+      const result = await response.json();
+
+      if (response.ok) {
+        // Success UI
+        btn.innerHTML = 'Message Sent! ✓';
+        btn.style.opacity = '1';
+        btn.style.background = 'linear-gradient(135deg, #00e676, #22d3c5)';
+        btn.style.boxShadow = '0 4px 24px rgba(0, 230, 118, 0.3)';
+        contactForm.reset();
+      } else {
+        throw new Error(result.error || 'Failed to send');
+      }
+    } catch (error) {
+      console.error('Error sending email:', error);
+      btn.innerHTML = 'Error! Try Again ✕';
+      btn.style.opacity = '1';
+      btn.style.background = 'linear-gradient(135deg, #ff5252, #ff1744)';
+    } finally {
+      // Reset button after 3 seconds
       setTimeout(() => {
-        btn.textContent = originalText;
+        btn.innerHTML = originalText;
         btn.style.background = '';
         btn.style.boxShadow = '';
         btn.disabled = false;
-        contactForm.reset();
-      }, 2500);
-    }, 800);
+        // Re-initialize lucide icons if needed since we replaced innerHTML
+        if (typeof lucide !== 'undefined') {
+          lucide.createIcons();
+        }
+      }, 3000);
+    }
   });
 }
 
