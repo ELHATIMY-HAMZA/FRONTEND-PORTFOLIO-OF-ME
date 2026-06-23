@@ -1,0 +1,262 @@
+/* =====================================================
+   Interactive 3D Profile Card — lw-card
+   Prefix: lw-  (to avoid conflicts with existing styles)
+   ===================================================== */
+
+/* ── Wrapper: provides perspective for the 3D tilt ── */
+.lw-tilt-wrapper {
+  perspective: 900px;
+  perspective-origin: 50% 50%;
+  display: inline-block;
+  touch-action: none;
+  /* CSS vars driven by JS */
+  --rx: 0deg;
+  --ry: 0deg;
+  --gx: 50%;
+  --gy: 50%;
+}
+
+/* ── The card itself ── */
+.lw-card {
+  position: relative;
+  width: 370px;
+  height: 490px;
+  border-radius: 28px;
+  overflow: hidden;
+  cursor: pointer;
+  background: #0d0d14;
+
+  /* subtle border */
+  border: 1px solid rgba(255, 255, 255, 0.10);
+  box-shadow:
+    0 2px 8px  rgba(0,0,0,.35),
+    0 12px 40px rgba(0,0,0,.5),
+    inset 0 0 0 1px rgba(255,255,255,.04);
+
+  /* 3D tilt comes from the wrapper */
+  transform:
+    rotateX(var(--rx))
+    rotateY(var(--ry))
+    translateZ(0);
+  transform-style: preserve-3d;
+  will-change: transform;
+  transition: transform 0.08s ease-out, box-shadow 0.4s ease, border-color 0.4s ease;
+}
+
+/* glow border on hover */
+.lw-card:hover {
+  border-color: rgba(124, 108, 240, 0.35);
+  box-shadow:
+    0 2px 8px  rgba(0,0,0,.35),
+    0 20px 60px rgba(0,0,0,.6),
+    0 0 0 1px rgba(124,108,240,.18),
+    0 0 60px rgba(124,108,240,.08);
+}
+
+/* reset tilt smoothly on mouse-leave */
+.lw-tilt-wrapper.is-leaving .lw-card {
+  transition: transform 0.7s cubic-bezier(0.22, 1, 0.36, 1),
+              box-shadow 0.4s ease,
+              border-color 0.4s ease;
+}
+
+/* ── Spotlight/glare layer ── */
+.lw-glare {
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  background: radial-gradient(
+    circle at var(--gx) var(--gy),
+    rgba(255,255,255,0.10) 0%,
+    transparent 60%
+  );
+  pointer-events: none;
+  z-index: 4;
+  opacity: 0;
+  transition: opacity 0.3s ease;
+}
+
+.lw-card:hover .lw-glare {
+  opacity: 1;
+}
+
+/* ── Image container ── */
+.lw-img-container {
+  position: absolute;
+  inset: 0;
+  overflow: hidden;
+  border-radius: inherit;
+  z-index: 1;
+
+  /* on hover: shrink image up to reveal info */
+  transition: transform 0.55s cubic-bezier(0.4, 0, 0.2, 1),
+              height   0.55s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.lw-card:hover .lw-img-container {
+  /* move the container up so image sits in top 72% */
+  transform: translateY(-10%) scale(0.92);
+}
+
+.lw-portrait {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: center top;
+  display: block;
+  border-radius: inherit;
+  transition: transform 0.55s cubic-bezier(0.4, 0, 0.2, 1);
+  transform-origin: 50% 20%;
+}
+
+.lw-card:hover .lw-portrait {
+  transform: scale(1.04);
+}
+
+/* Gradient fade at bottom of image */
+.lw-img-fade {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  height: 55%;
+  background: linear-gradient(
+    to bottom,
+    transparent 0%,
+    rgba(8, 8, 14, 0.55) 45%,
+    rgba(8, 8, 14, 0.95) 100%
+  );
+  pointer-events: none;
+  z-index: 2;
+  border-radius: inherit;
+}
+
+/* ── Info panel (hidden by default, revealed on hover) ── */
+.lw-info {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  padding: 22px 24px 26px;
+  z-index: 3;
+
+  /* start hidden below */
+  transform: translateY(28px);
+  opacity: 0;
+  transition:
+    transform 0.55s cubic-bezier(0.4, 0, 0.2, 1),
+    opacity   0.45s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.lw-card:hover .lw-info {
+  transform: translateY(0);
+  opacity: 1;
+}
+
+/* name */
+.lw-info-name {
+  font-family: 'Outfit', 'Inter', sans-serif;
+  font-size: 1.45rem;
+  font-weight: 800;
+  letter-spacing: -0.5px;
+  color: #ffffff;
+  margin: 0 0 4px;
+  line-height: 1.2;
+  text-shadow: 0 1px 12px rgba(0,0,0,.5);
+}
+
+/* title / bio */
+.lw-info-title {
+  font-family: 'Inter', sans-serif;
+  font-size: 0.82rem;
+  font-weight: 500;
+  color: rgba(255, 255, 255, 0.60);
+  margin: 0 0 18px;
+  letter-spacing: 0.2px;
+  text-shadow: 0 1px 8px rgba(0,0,0,.4);
+}
+
+/* Follow button row */
+.lw-info-actions {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.lw-btn-follow {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 10px 22px;
+  border-radius: 50px;
+  border: none;
+  font-family: 'Inter', sans-serif;
+  font-size: 0.8rem;
+  font-weight: 700;
+  letter-spacing: 0.3px;
+  color: #fff;
+  background: linear-gradient(135deg, #7c6cf0, #22d3c5);
+  cursor: pointer;
+  pointer-events: auto;
+  box-shadow: 0 4px 20px rgba(124, 108, 240, 0.35);
+  transition: transform 0.2s ease, box-shadow 0.2s ease, filter 0.2s ease;
+  position: relative;
+  overflow: hidden;
+}
+
+.lw-btn-follow::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(90deg, transparent, rgba(255,255,255,0.15), transparent);
+  transform: translateX(-100%);
+  transition: transform 0.4s ease;
+}
+
+.lw-btn-follow:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 28px rgba(124, 108, 240, 0.5);
+  filter: brightness(1.1);
+}
+
+.lw-btn-follow:hover::before {
+  transform: translateX(100%);
+}
+
+.lw-btn-follow:active {
+  transform: translateY(0);
+}
+
+/* small avatar indicator dot */
+.lw-status-dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: #00e676;
+  box-shadow: 0 0 8px rgba(0, 230, 118, 0.6);
+  flex-shrink: 0;
+  animation: lw-pulse 2s ease-in-out infinite;
+}
+
+@keyframes lw-pulse {
+  0%, 100% { opacity: 1; transform: scale(1); }
+  50%       { opacity: 0.5; transform: scale(0.75); }
+}
+
+/* ── Responsive ── */
+@media (max-width: 900px) {
+  .lw-card {
+    width: 320px;
+    height: 420px;
+  }
+}
+
+@media (max-width: 600px) {
+  .lw-card {
+    width: 280px;
+    height: 370px;
+  }
+  .lw-info-name { font-size: 1.2rem; }
+  .lw-info-title { font-size: 0.75rem; margin-bottom: 14px; }
+  .lw-btn-follow { padding: 8px 18px; font-size: 0.75rem; }
+}

@@ -8,6 +8,8 @@
   <meta name="description"
     content="Portfolio of Hamza Elhatimy, a passionate full stack developer based in Casablanca, Morocco.">
   <link rel="stylesheet" href="style.css">
+  <link rel="stylesheet" href="target-cursor.css">
+  <link rel="stylesheet" href="profile-card.css">
   <script src="https://unpkg.com/lucide@latest/dist/umd/lucide.min.js" defer></script>
   <link rel="icon"
     href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>⚡</text></svg>">
@@ -67,13 +69,7 @@
         </div>
       </div>
       <div class="hero-visual reveal reveal-delay-2">
-        <div class="avatar-wrapper magnetic">
-          <div class="avatar-conic-border"></div>
-          <div class="avatar-bg"></div>
-          <img src="profile-pic.png" alt="Hamza Elhatimy" class="avatar-img">
-          <div class="avatar-float top enhanced-glass"><i data-lucide="code-2"></i> Clean Code</div>
-          <div class="avatar-float bottom enhanced-glass"><i data-lucide="zap"></i> Fast Performance</div>
-        </div>
+        <div id="profile-card-mount"></div>
       </div>
     </div>
   </section>
@@ -199,84 +195,83 @@
         <h2 class="section-title">Featured <span class="gradient">Projects</span></h2>
       </div>
 
-      <!-- Image-Reveal Project List -->
-        <div class="ir-list reveal" id="ir-projects">
+      <!-- 3D Tilt Card Grid -->
+      <div class="tilt-cards-grid reveal" id="tilt-cards-grid">
 
-          <div class="ir-item" data-img="https://images.pexels.com/photos/196644/pexels-photo-196644.jpeg?auto=compress&cs=tinysrgb&w=600">
-            <div class="ir-meta">
-              <div class="ir-tags">
+        <div class="tilt-card" id="tilt-card-0">
+          <div class="tilt-card-inner">
+            <div class="tilt-card-img" style="background-image:url('https://images.pexels.com/photos/196644/pexels-photo-196644.jpeg?auto=compress&cs=tinysrgb&w=800')"></div>
+            <div class="tilt-card-glare"></div>
+            <div class="tilt-card-content">
+              <div class="tilt-card-tags">
                 <span class="tech-tag"><img src="https://cdn.simpleicons.org/html5/E34F26" alt="HTML5" class="tech-icon"> HTML5</span>
-                <span class="tech-tag"><img src="https://cdn.simpleicons.org/css3/1572B6" alt="CSS" class="tech-icon"> Vanilla CSS</span>
+                <span class="tech-tag"><img src="https://cdn.simpleicons.org/css3/1572B6" alt="CSS" class="tech-icon"> CSS</span>
                 <span class="tech-tag"><img src="https://cdn.simpleicons.org/javascript/F7DF1E" alt="JS" class="tech-icon"> JS</span>
               </div>
-              <p class="ir-desc">A highly interactive, performance-optimized personal portfolio featuring complex CSS animations, glassmorphism UI, and modern bento-box layouts.</p>
-            </div>
-            <h3 class="ir-title">Premium Portfolio</h3>
-            <div class="ir-right">
-              <a href="#" class="ir-link" aria-label="Live Preview">
-                <svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="7" y1="17" x2="17" y2="7"/><polyline points="7 7 17 7 17 17"/></svg>
+              <h3 class="tilt-card-title">Premium Portfolio</h3>
+              <p class="tilt-card-desc">A highly interactive portfolio featuring glassmorphism UI, complex CSS animations, and modern bento-box layouts.</p>
+              <a href="#" class="tilt-card-link" aria-label="Live Preview">
+                View Project <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="7" y1="17" x2="17" y2="7"/><polyline points="7 7 17 7 17 17"/></svg>
               </a>
             </div>
-            <div class="ir-line"></div>
           </div>
+        </div>
 
-          <div class="ir-item" data-img="https://images.pexels.com/photos/265087/pexels-photo-265087.jpeg?auto=compress&cs=tinysrgb&w=600">
-            <div class="ir-meta">
-              <div class="ir-tags">
+        <div class="tilt-card" id="tilt-card-1">
+          <div class="tilt-card-inner">
+            <div class="tilt-card-img" style="background-image:url('https://images.pexels.com/photos/265087/pexels-photo-265087.jpeg?auto=compress&cs=tinysrgb&w=800')"></div>
+            <div class="tilt-card-glare"></div>
+            <div class="tilt-card-content">
+              <div class="tilt-card-tags">
                 <span class="tech-tag"><img src="https://cdn.simpleicons.org/react/61DAFB" alt="React" class="tech-icon"> React</span>
                 <span class="tech-tag"><img src="https://cdn.simpleicons.org/nodedotjs/5FA04E" alt="Node.js" class="tech-icon"> Node.js</span>
               </div>
-              <p class="ir-desc">A comprehensive admin dashboard for managing products, orders, and analytics with real-time data visualization.</p>
-            </div>
-            <h3 class="ir-title">E-Commerce Dashboard</h3>
-            <div class="ir-right">
-              <a href="#" class="ir-link" aria-label="View Project">
-                <svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="7" y1="17" x2="17" y2="7"/><polyline points="7 7 17 7 17 17"/></svg>
+              <h3 class="tilt-card-title">E-Commerce Dashboard</h3>
+              <p class="tilt-card-desc">A comprehensive admin dashboard for managing products, orders, and analytics with real-time data visualization.</p>
+              <a href="#" class="tilt-card-link" aria-label="View Project">
+                View Project <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="7" y1="17" x2="17" y2="7"/><polyline points="7 7 17 7 17 17"/></svg>
               </a>
             </div>
-            <div class="ir-line"></div>
           </div>
+        </div>
 
-          <div class="ir-item" data-img="https://images.pexels.com/photos/1181467/pexels-photo-1181467.jpeg?auto=compress&cs=tinysrgb&w=600">
-            <div class="ir-meta">
-              <div class="ir-tags">
+        <div class="tilt-card" id="tilt-card-2">
+          <div class="tilt-card-inner">
+            <div class="tilt-card-img" style="background-image:url('https://images.pexels.com/photos/1181467/pexels-photo-1181467.jpeg?auto=compress&cs=tinysrgb&w=800')"></div>
+            <div class="tilt-card-glare"></div>
+            <div class="tilt-card-content">
+              <div class="tilt-card-tags">
                 <span class="tech-tag"><img src="https://cdn.simpleicons.org/express/white" alt="Express" class="tech-icon"> Express</span>
                 <span class="tech-tag"><img src="https://cdn.simpleicons.org/mongodb/47A248" alt="MongoDB" class="tech-icon"> MongoDB</span>
               </div>
-              <p class="ir-desc">A scalable RESTful API backend serving user authentication, posts, comments, and real-time notifications.</p>
-            </div>
-            <h3 class="ir-title">Social Media API</h3>
-            <div class="ir-right">
-              <a href="#" class="ir-link" aria-label="View Project">
-                <svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="7" y1="17" x2="17" y2="7"/><polyline points="7 7 17 7 17 17"/></svg>
+              <h3 class="tilt-card-title">Social Media API</h3>
+              <p class="tilt-card-desc">A scalable RESTful API backend serving user authentication, posts, comments, and real-time notifications.</p>
+              <a href="#" class="tilt-card-link" aria-label="View Project">
+                View Project <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="7" y1="17" x2="17" y2="7"/><polyline points="7 7 17 7 17 17"/></svg>
               </a>
             </div>
-            <div class="ir-line"></div>
           </div>
+        </div>
 
-          <div class="ir-item" data-img="https://images.pexels.com/photos/546819/pexels-photo-546819.jpeg?auto=compress&cs=tinysrgb&w=600">
-            <div class="ir-meta">
-              <div class="ir-tags">
+        <div class="tilt-card" id="tilt-card-3">
+          <div class="tilt-card-inner">
+            <div class="tilt-card-img" style="background-image:url('https://images.pexels.com/photos/546819/pexels-photo-546819.jpeg?auto=compress&cs=tinysrgb&w=800')"></div>
+            <div class="tilt-card-glare"></div>
+            <div class="tilt-card-content">
+              <div class="tilt-card-tags">
                 <span class="tech-tag"><img src="https://cdn.simpleicons.org/python/3776AB" alt="Python" class="tech-icon"> Python</span>
                 <span class="tech-tag"><img src="https://cdn.simpleicons.org/anthropic/D97757" alt="AI" class="tech-icon"> AI</span>
               </div>
-              <p class="ir-desc">An intelligent automation platform powered by AI agents that streamlines repetitive workflows and integrates with third-party services.</p>
-            </div>
-            <h3 class="ir-title">AI Workflow Engine</h3>
-            <div class="ir-right">
-              <a href="#" class="ir-link" aria-label="View Project">
-                <svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="7" y1="17" x2="17" y2="7"/><polyline points="7 7 17 7 17 17"/></svg>
+              <h3 class="tilt-card-title">AI Workflow Engine</h3>
+              <p class="tilt-card-desc">An intelligent automation platform powered by AI agents that streamlines repetitive workflows and integrates with third-party services.</p>
+              <a href="#" class="tilt-card-link" aria-label="View Project">
+                View Project <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="7" y1="17" x2="17" y2="7"/><polyline points="7 7 17 7 17 17"/></svg>
               </a>
             </div>
-            <div class="ir-line"></div>
           </div>
-
         </div>
 
-        <!-- Floating cursor image (shared, moved via JS) -->
-        <div class="ir-cursor-img" id="ir-cursor-img" aria-hidden="true">
-          <img id="ir-cursor-img-el" src="" alt="" />
-        </div>
+      </div>
     </div>
   </section>
 
@@ -316,19 +311,19 @@
         <form class="contact-form glass-card reveal reveal-delay-1">
           <div class="form-row">
             <div class="input-group">
-              <input type="text" placeholder="Your Name" required>
+              <input type="text" placeholder="Your Name" required class="cursor-target">
             </div>
             <div class="input-group">
-              <input type="email" placeholder="Your Email" required>
+              <input type="email" placeholder="Your Email" required class="cursor-target">
             </div>
           </div>
           <div class="input-group">
-            <input type="text" placeholder="Subject" required>
+            <input type="text" placeholder="Subject" required class="cursor-target">
           </div>
           <div class="input-group">
-            <textarea placeholder="Tell me about your project..." required></textarea>
+            <textarea placeholder="Tell me about your project..." required class="cursor-target"></textarea>
           </div>
-          <button type="submit" class="btn btn-gradient" style="align-self: flex-start;">
+          <button type="submit" class="btn btn-gradient cursor-target" style="align-self: flex-start;">
             <div class="btn-gradient-glow"></div>
             Send Message <i data-lucide="send"></i>
           </button>
@@ -358,7 +353,37 @@
   <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/ScrollTrigger.min.js"></script>
   <script src="smokey-cursor.js"></script>
   <script src="script.js"></script>
-  <script>document.addEventListener('DOMContentLoaded', () => { if (typeof lucide !== 'undefined') lucide.createIcons(); });</script>
+  <script src="target-cursor.js"></script>
+  <script src="profile-card.js"></script>
+  <script>
+    document.addEventListener('DOMContentLoaded', () => {
+      if (typeof lucide !== 'undefined') lucide.createIcons();
+
+      // Initialise ProfileCard in hero section
+      if (typeof initProfileCard !== 'undefined') {
+        initProfileCard({
+          containerId:   'profile-card-mount',
+          avatarUrl:     'profile-pic.png',
+          name:          'Hamza Elhatimy',
+          title:         'Full Stack Developer · Casablanca',
+          followText:    'Contact Me',
+          onFollowClick: () => document.querySelector('#contact').scrollIntoView({ behavior: 'smooth' })
+        });
+      }
+
+      // Initialise TargetCursor — targets only the contact form elements
+      if (typeof initTargetCursor !== 'undefined') {
+        initTargetCursor({
+          targetSelector: '.cursor-target',
+          scopeSelector: '#contact',
+          spinDuration: 2,
+          hideDefaultCursor: true,
+          hoverDuration: 0.2,
+          parallaxOn: true
+        });
+      }
+    });
+  </script>
 </body>
 
 </html>

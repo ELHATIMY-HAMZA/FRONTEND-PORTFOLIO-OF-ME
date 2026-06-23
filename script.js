@@ -511,71 +511,93 @@ document.addEventListener("DOMContentLoaded", () => {
   }
 });
 
-// ===== Projects Image Reveal =====
-const irItems = document.querySelectorAll('.ir-item');
-const irCursorImg = document.getElementById('ir-cursor-img');
-const irCursorImgEl = document.getElementById('ir-cursor-img-el');
+// ===== Projects — 3D Tilt Cards =====
+(function () {
+  const cards = document.querySelectorAll('.tilt-card');
+  if (!cards.length) return;
 
-if (irItems.length > 0 && irCursorImg && irCursorImgEl) {
-  let isLargeScreen = window.innerWidth >= 768;
-  
-  window.addEventListener('resize', () => {
-    isLargeScreen = window.innerWidth >= 768;
-  });
+  // Linear interpolation for smooth spring feel
+  function lerp(a, b, t) { return a + (b - a) * t; }
 
-  // Smooth spring-like cursor tracking (vanilla JS equivalent of Framer Motion's useSpring)
-  let mx = 0, my = 0;
-  let cx = 0, cy = 0;
-  
-  document.addEventListener('mousemove', (e) => {
-    mx = e.clientX;
-    my = e.clientY;
-  });
-  
-  function updateIrCursor() {
-    if (isLargeScreen && irCursorImg.classList.contains('active')) {
-      // Spring physics approximation
-      const stiffness = 0.15;
-      
-      const dx = mx - cx;
-      const dy = my - cy;
-      
-      cx += dx * stiffness;
-      cy += dy * stiffness;
-      
-      irCursorImg.style.left = cx + 'px';
-      irCursorImg.style.top = cy + 'px';
-    }
-    requestAnimationFrame(updateIrCursor);
-  }
-  updateIrCursor();
+  cards.forEach(card => {
+    const inner = card.querySelector('.tilt-card-inner');
+    const glare = card.querySelector('.tilt-card-glare');
+    const img   = card.querySelector('.tilt-card-img');
+    if (!inner) return;
 
-  irItems.forEach(item => {
-    item.addEventListener('mouseenter', () => {
-      if (!isLargeScreen) return;
-      const imgSrc = item.getAttribute('data-img');
-      if (imgSrc) {
-        irCursorImgEl.src = imgSrc;
-        irCursorImgEl.alt = item.querySelector('.ir-title').textContent;
-        // Snap the cursor image to the exact mouse position immediately on entry
-        if (!irCursorImg.classList.contains('active')) {
-           cx = mx;
-           cy = my;
-           irCursorImg.style.left = cx + 'px';
-           irCursorImg.style.top = cy + 'px';
-        }
-        irCursorImg.classList.add('active');
+    let curRotX = 0, curRotY = 0;
+    let tgtRotX = 0, tgtRotY = 0;
+    let rafId = null;
+    let isHovered = false;
+    let borderAngle = 0;
+
+    function animate() {
+      curRotX = lerp(curRotX, tgtRotX, 0.12);
+      curRotY = lerp(curRotY, tgtRotY, 0.12);
+
+      inner.style.transform =
+        `rotateX(${curRotX}deg) rotateY(${curRotY}deg) scale3d(1.03, 1.03, 1.03)`;
+
+      // Subtle image counter-parallax (gives depth)
+      if (img) {
+        img.style.transform =
+          `scale(1.1) translateX(${-curRotY * 0.6}px) translateY(${curRotX * 0.6}px)`;
       }
+
+      // Animate border spotlight angle
+      if (isHovered) {
+        const targetAngle = Math.atan2(tgtRotY, -tgtRotX) * (180 / Math.PI);
+        borderAngle = lerp(borderAngle, targetAngle, 0.08);
+        inner.style.setProperty('--border-angle', borderAngle + 'deg');
+      }
+
+      if (isHovered || Math.abs(curRotX) > 0.05 || Math.abs(curRotY) > 0.05) {
+        rafId = requestAnimationFrame(animate);
+      } else {
+        // Fully settled — reset to neutral
+        inner.style.transform = '';
+        if (img) img.style.transform = '';
+        inner.style.setProperty('--border-angle', '0deg');
+        rafId = null;
+      }
+    }
+
+    card.addEventListener('mousemove', e => {
+      const rect = inner.getBoundingClientRect();
+      const x = e.clientX - rect.left;
+      const y = e.clientY - rect.top;
+      const cx = rect.width  / 2;
+      const cy = rect.height / 2;
+
+      tgtRotX = ((y - cy) / cy) * -15;
+      tgtRotY = ((x - cx) / cx) *  15;
+
+      // Glare position (percentage)
+      const px = (x / rect.width)  * 100;
+      const py = (y / rect.height) * 100;
+      if (glare) {
+        glare.style.setProperty('--glare-x', px + '%');
+        glare.style.setProperty('--glare-y', py + '%');
+      }
+
+      if (!rafId) rafId = requestAnimationFrame(animate);
+    });
+
+    card.addEventListener('mouseenter', () => {
+      isHovered = true;
+      if (!rafId) rafId = requestAnimationFrame(animate);
+    });
+
+    card.addEventListener('mouseleave', () => {
+      isHovered = false;
+      tgtRotX = 0;
+      tgtRotY = 0;
+      if (!rafId) rafId = requestAnimationFrame(animate);
     });
   });
-  
-  const irList = document.getElementById('ir-projects');
-  if (irList) {
-    irList.addEventListener('mouseleave', () => {
-      irCursorImg.classList.remove('active');
-    });
-  }
-}
+})();
+
+
 
 // ===== WebGL Fluid Simulation =====
 const fluidCanvas = document.getElementById('fluid-canvas');
