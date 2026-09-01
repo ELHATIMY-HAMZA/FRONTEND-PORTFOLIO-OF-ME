@@ -20,10 +20,16 @@
   },
   "homepage": "https://github.com/Hamouzza4/porfolio-html#readme",
   "dependencies": {
-    "html-react-parser": "^5.2.6",
+    "@tailwindcss/vite": "^4.3.3",
+    "clsx": "^2.1.1",
+    "lenis": "^1.3.26",
+    "lucide-react": "^1.37.0",
+    "motion": "^13.1.1",
     "react": "^19.1.1",
     "react-dom": "^19.1.1",
-    "resend": "^6.14.0"
+    "resend": "^6.14.0",
+    "tailwind-merge": "^3.6.0",
+    "tailwindcss": "^4.3.3"
   },
   "devDependencies": {
     "@vitejs/plugin-react": "^5.0.2",
