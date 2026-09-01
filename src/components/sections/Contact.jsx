@@ -19,14 +19,6 @@ import { cn } from '../../lib/utils';
 
 const EMPTY = { name: '', email: '', subject: '', message: '' };
 
-/**
- * Contact.
- *
- * Submit logic is preserved from `dist` exactly, including the deliberate
- * 404/405 fallback: `api/send-email.js` is a Vercel serverless function and
- * does not exist under plain `vite dev`, so a missing route is treated as a
- * simulated success rather than surfacing a false error locally.
- */
 export default function Contact() {
   const [form, setForm] = useState(EMPTY);
   const [status, setStatus] = useState('idle'); // idle | sending | success | error
@@ -41,19 +33,16 @@ export default function Contact() {
     setFeedback('');
 
     try {
+      const submissionId = crypto.randomUUID();
       const res = await fetch('/api/send-email', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(form),
+        body: JSON.stringify({ ...form, submissionId }),
       });
 
       if (res.ok) {
         setStatus('success');
         setFeedback(contact.messages.success);
-        setForm(EMPTY);
-      } else if (res.status === 404 || res.status === 405) {
-        setStatus('success');
-        setFeedback(contact.messages.simulated);
         setForm(EMPTY);
       } else {
         const data = await res.json().catch(() => ({}));
@@ -61,9 +50,8 @@ export default function Contact() {
         setFeedback(data.error || contact.messages.error);
       }
     } catch {
-      setStatus('success');
-      setFeedback(contact.messages.queued);
-      setForm(EMPTY);
+      setStatus('error');
+      setFeedback(contact.messages.error);
     }
   };
 
