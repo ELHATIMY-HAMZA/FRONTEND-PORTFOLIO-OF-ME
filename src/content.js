@@ -1,10 +1,9 @@
 /**
  * CONTENT — single source of truth.
  *
- * Every string below is VERBATIM from the existing portfolio. It was recovered
- * from the compiled `dist/assets/index-B1ObwSXs.js` bundle, which was the only
- * surviving copy of the "Full Stack & AI Engineer" version (its JSX source had
- * been lost). Nothing here is rewritten — only re-presented.
+ * Shared portfolio copy and project details. The original profile content was
+ * recovered from the compiled portfolio; project copy is maintained here so
+ * the featured section and any future project lists stay consistent.
  */
 
 export const profile = {
@@ -229,64 +228,35 @@ export const skillsFlat = skills.groups.flatMap((group) =>
   group.items.map((item) => ({ ...item, group: group.id }))
 );
 
-export const projects = {
-  kicker: 'Curated Portfolio',
-  title: 'Featured Projects',
-  allLink: 'View all repositories on GitHub',
-  items: [
-    {
-      id: 'portfolio-v2',
-      title: 'Developer Showcase & Interactive Platform',
-      description:
-        'A high-performance modern developer portfolio featuring glassmorphism design tokens, responsive bento layouts, and automated contact pipelines.',
-      image:
-        'https://images.pexels.com/photos/196644/pexels-photo-196644.jpeg?auto=compress&cs=tinysrgb&w=800',
-      tags: ['React 19', 'Tailwind CSS', 'Vite', 'Three.js'],
-      badge: 'Live Platform',
-      metric: '⚡ 100% PageSpeed',
-      link: '#',
-      github: 'https://github.com/ELHATIMY-HAMZA',
-    },
-    {
-      id: 'ecommerce-dashboard',
-      title: 'E-Commerce Intelligence Dashboard',
-      description:
-        'Full-stack admin platform engineered for managing multi-store inventory, sales analytics, customer cohorts, and role-based permissions.',
-      image:
-        'https://images.pexels.com/photos/265087/pexels-photo-265087.jpeg?auto=compress&cs=tinysrgb&w=800',
-      tags: ['React', 'Node.js', 'Express', 'MySQL'],
-      badge: 'Full Stack',
-      metric: '📊 Real-Time Metrics',
-      link: '#',
-      github: 'https://github.com/ELHATIMY-HAMZA',
-    },
-    {
-      id: 'social-api',
-      title: 'Scalable Social Media RESTful Engine',
-      description:
-        'High-throughput backend API featuring JWT authentication, media handling, websocket notifications, and optimized MongoDB aggregation pipelines.',
-      image:
-        'https://images.pexels.com/photos/1181467/pexels-photo-1181467.jpeg?auto=compress&cs=tinysrgb&w=800',
-      tags: ['Node.js', 'Express', 'MongoDB', 'JWT Auth'],
-      badge: 'Backend API',
-      metric: '🔒 Secure & Scalable',
-      link: '#',
-      github: 'https://github.com/ELHATIMY-HAMZA',
-    },
-    {
-      id: 'ai-agent-engine',
-      title: 'Autonomous AI Workflow Orchestrator',
-      description:
-        'Multi-agent intelligent automation framework leveraging Claude/LLM tool calls and n8n to ingest unstructured data and automate operations.',
-      image:
-        'https://images.pexels.com/photos/546819/pexels-photo-546819.jpeg?auto=compress&cs=tinysrgb&w=800',
-      tags: ['Python', 'n8n.io', 'Claude API', 'Automation'],
-      badge: 'AI Agentic',
-      metric: '🤖 10x Efficiency',
-      link: '#',
-      github: 'https://github.com/ELHATIMY-HAMZA',
-    },
+const dayweaveProject = {
+  id: 'dayweave',
+  name: 'Dayweave',
+  title: 'Dayweave — Daily Task Planner',
+  category: 'Productivity',
+  tagline: 'A calmer way to plan your day.',
+  description:
+    'Overloaded to-do lists make it hard to know where to start. Dayweave brings time budgeting, task priorities, and focused work into one place, so you can plan a day that fits your actual capacity.',
+  image: '/dayweave-preview.webp',
+  deployUrl: 'https://dayweave-todo-list-app.vercel.app/',
+  link: 'https://dayweave-todo-list-app.vercel.app/',
+  badge: 'Live app',
+  status: 'Live on Vercel',
+  isPrivateSource: true,
+  tags: ['MongoDB', 'Express', 'React', 'Node.js', 'Clerk'],
+  stack: [
+    { name: 'MongoDB', icon: 'mongodb' },
+    { name: 'Express', icon: 'express' },
+    { name: 'React', icon: 'react' },
+    { name: 'Node.js', icon: 'nodedotjs' },
   ],
+  auth: 'Clerk authentication',
+};
+
+export const projects = {
+  kicker: 'Selected Work',
+  title: 'Featured Project',
+  item: dayweaveProject,
+  items: [dayweaveProject],
 };
 
 export const contact = {
